@@ -1,11 +1,65 @@
-import { Header } from "@/components/Header";
+import { useState } from "react";
+import { Form } from "@/components/Form";
+import { Filter } from "@/components/Filter";
+import { TaskContainer } from "@/components/TaskContainer";
+import { Tovchlol } from "@/components/Tovchlol";
 
-const index = () => {
+export const Home = () => {
+  const [taskList, setTaskList] = useState([]);
+  const [currentFilter, setCurrentFilter] = useState("all");
+
+  const clearCompletedTasks = () => {
+    const confirmClear = window.confirm(
+      "Are you sure you want to clear all completed tasks?",
+    );
+
+    if (!confirmClear) return;
+
+    const remainingTasks = taskList.filter((task) => !task.isCompleted);
+    setTaskList(remainingTasks);
+  };
+
+  const filteredTasks = taskList.filter((task) => {
+    if (currentFilter === "active") return !task.isCompleted;
+    if (currentFilter === "completed") return task.isCompleted;
+
+    return true;
+  });
+
   return (
-    <div className="bg-gray-400 flex justify-center h-250 items-center">
-      <Header />
+    <div className="container text-black flex justify-center  items-center w-full min-h-screen ">
+      <div className="inner-container w-94.25 flex flex-col mt-20 p-6 bg-white rounded-lg shadow gap-6">
+        <h1 className="title font-semibold flex justify-center text-xl">
+          To-Do List
+        </h1>
+
+        <Form updateTaskList={setTaskList} taskListValue={taskList} />
+
+        <Filter
+          activeFilterValue={currentFilter}
+          updateCurrentFilter={setCurrentFilter}
+        />
+
+        <TaskContainer
+          filteredTasksValue={filteredTasks}
+          taskListValue={taskList}
+          updateTaskList={setTaskList}
+        />
+
+        {Boolean(taskList.length) && (
+          <Tovchlol
+            handleClearCompletedTasks={clearCompletedTasks}
+            taskListValue={taskList}
+          />
+        )}
+
+        <div className="footer flex justify-center justify-self-end gap-1 mt-4 text-sm text-gray-500">
+          <span>Powered by</span>
+          <span className="text-blue-500">Pinecone Academy</span>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default index;
+export default Home;
