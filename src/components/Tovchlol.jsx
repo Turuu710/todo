@@ -2,10 +2,12 @@ export const Tovchlol = ({ handleClearCompletedTasks, taskListValue }) => {
   const completedCount = taskListValue.filter(
     (task) => task.isCompleted,
   ).length;
-
+  const complate = taskListValue.filter((task) => !task.complate).length;
   return (
-    <div className="summary flex justify-between items-center mt-4 text-sm text-gray-600">
-      <span>{completedCount} task completed</span>
+    <div className="summary flex justify-between items-center mt-4 text-sm text-gray-600 ">
+      <span>
+        {completedCount}/{complate} task completed
+      </span>
 
       <button
         onClick={handleClearCompletedTasks}
